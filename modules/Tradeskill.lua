@@ -94,7 +94,6 @@ function Tradeskill:OnEnable()
 
     if C_TradeSkillUI and C_TradeSkillUI.CraftRecipe then
         self:SecureHook(C_TradeSkillUI, "CraftRecipe", function(recipeID, count)
-            print("|cffff0000[Quartz Debug]|r Modern Hook Caught! Count:", count)
             self:DoTradeSkill(nil, recipeID, count)
         end)
     end
