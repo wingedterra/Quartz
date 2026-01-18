@@ -87,21 +87,21 @@ end
 
 
 function Tradeskill:OnEnable()
-	self:RawHook(Player, "UNIT_SPELLCAST_START")
-	self:RegisterEvent("UNIT_SPELLCAST_STOP")
-	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
-	self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
-	if WoWRetail then
-		if ProfessionsFrame then
-			self:SecureHook(ProfessionsFrame.CraftingPage, "CreateInternal", "DoTradeSkill")
-		else
-			self:RegisterEvent("ADDON_LOADED")
-		end
-	elseif C_TradeSkillUI and C_TradeSkillUI.CraftRecipe then
-		self:SecureHook(C_TradeSkillUI, "CraftRecipe", "DoTradeSkillClassic")
-	else
-		self:SecureHook("DoTradeSkill", "DoTradeSkillClassic")
-	end
+    self:RawHook(Player, "UNIT_SPELLCAST_START")
+    self:RegisterEvent("UNIT_SPELLCAST_STOP")
+    self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+    self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
+
+    if C_TradeSkillUI and C_TradeSkillUI.CraftRecipe then
+        self:SecureHook(C_TradeSkillUI, "CraftRecipe", function(recipeID, count)
+            print("|cffff0000[Quartz Debug]|r Modern Hook Caught! Count:", count)
+            self:DoTradeSkill(nil, recipeID, count)
+        end)
+    end
+
+    if not WoWRetail then
+        self:SecureHook("DoTradeSkill", "DoTradeSkillClassic")
+    end
 end
 
 function Tradeskill:ADDON_LOADED(event, addon)
